@@ -1,0 +1,74 @@
+using System;
+using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
+
+namespace WB.Logging;
+
+/// <summary>
+/// A logger.
+/// </summary>
+public interface ILogger : IAsyncDisposable
+{
+    // ┌─────────────────────────────────────────────────────────────────────────────┐
+    // │ Public Properties.                                                          │
+    // └─────────────────────────────────────────────────────────────────────────────┘
+
+    /// <summary>
+    /// Gets the list of attached <see cref="ILogSink"/>s.
+    /// </summary>
+    /// <remarks>
+    /// The log sinks in this list will receive all log messages submitted to this logger.
+    /// </remarks>
+    public IReadOnlyList<ILogSink> LogSinks { get; }
+
+    // ┌─────────────────────────────────────────────────────────────────────────────┐
+    // │ Public Methods.                                                             │
+    // └─────────────────────────────────────────────────────────────────────────────┘
+
+    /// <summary>
+    /// Logs a <paramref name="message"/> at the specified <paramref name="logLevel"/>.
+    /// </summary>
+    /// <param name="logLevel">The <see cref="LogLevel"/>.</param>
+    /// <param name="message">The message to log.</param>
+    public void Log(LogLevel? logLevel, object message);
+
+    /// <summary>
+    /// Logs the <paramref name="exception"/>
+    /// </summary>
+    /// <param name="exception">The <see cref="Exception"/> to log.</param>
+    public void Log(Exception exception);
+
+    /// <summary>
+    /// Logs the <paramref name="message"/> at <see cref="LogLevel.Info"/>.
+    /// </summary>
+    /// <param name="message">The message to log.</param>
+    public void Info(object message);
+
+    /// <summary>
+    /// Logs the <paramref name="message"/> at <see cref="LogLevel.Warning"/>.
+    /// </summary>
+    /// <param name="message">The message to log.</param>
+    public void Warning(object message);
+
+    /// <summary>
+    /// Logs the <paramref name="message"/> at <see cref="LogLevel.Error"/>.
+    /// </summary>
+    /// <param name="message">The message to log.</param>
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Naming", "CA1716:Identifiers should not match keywords", Justification = "Common logging term.")]
+    public void Error(object message);
+
+    /// <summary>
+    /// Flushes all pending log messages.
+    /// </summary>
+    /// <param name="cancellationToken">A <see cref="CancellationToken"/> to observe while waiting for the flush to complete.</param>
+    /// <returns>A <see cref="Task"/> that represents the asynchronous flush operation.</returns>
+    public Task FlushAsync(CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Attaches a <see cref="ILogSink"/> to this logger. The log sink will receive all log messages submitted to this logger.
+    /// </summary>
+    /// <param name="logSink">The <see cref="ILogSink"/> to attach.</param>
+    /// <returns>An <see cref="IDisposable"/> that can be used to detach the log sink.</returns>
+    public IDisposable AttachLogSink(ILogSink logSink);
+}

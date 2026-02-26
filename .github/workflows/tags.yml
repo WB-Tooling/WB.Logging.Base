@@ -1,0 +1,172 @@
+name: Build
+
+on: 
+  push: 
+    tags:
+      - "*"
+
+jobs:
+  validate-version:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Extract version from csproj
+        id: csproj
+        working-directory: src
+        run: |
+          FILE=$(find . -maxdepth 2 -name "WB.Logging.csproj" | head -n 1)
+
+          if [ -z "$FILE" ]; then
+            echo "No csproj file found"
+            exit 1
+          fi
+
+          VERSION=$(grep -oPm1 "(?<=<Version>)[^<]+" "$FILE")
+
+          if [ -z "$VERSION" ]; then
+            echo "No <Version> tag found in $FILE"
+            exit 1
+          fi
+
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+
+      - name: Compare tag with csproj version
+        run: |
+          TAG="${GITHUB_REF_NAME}"
+
+          # Strip leading 'v' if present
+          CLEAN_TAG="${TAG#v}"
+
+          if [ "$CLEAN_TAG" != "${{ steps.csproj.outputs.version }}" ]; then
+            echo "Version mismatch:"
+            echo "  Tag:      $TAG"
+            echo "  CleanTag: $CLEAN_TAG"
+            echo "  csproj:   ${{ steps.csproj.outputs.version }}"
+            exit 1
+          fi
+
+          echo "Version matches tag: $TAG"
+
+  build:
+    runs-on: ubuntu-latest
+    needs: validate-version
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '10.0.x'
+    
+    - name: Restore dependencies
+      working-directory: src
+      run: dotnet restore
+    
+    - name: Build
+      working-directory: src
+      run: dotnet build --no-restore --configuration Release
+
+  test:
+    runs-on: ubuntu-latest
+    needs: build
+    permissions:
+      checks: write
+      pull-requests: write
+    strategy:
+      matrix:
+        test: [ConsoleLogSinkTests, ExtensionsTests, LoggerTests]
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '10.0.x'
+    
+    - name: Restore dependencies
+      working-directory: tests/${{ matrix.test }}/src
+      run: dotnet restore
+    
+    - name: Test
+      working-directory: tests/${{ matrix.test }}/src
+      run: dotnet run --no-restore --configuration Release --report-trx
+    
+    - name: Publish Test Results
+      uses: EnricoMi/publish-unit-test-result-action@v2
+      if: (!cancelled())
+      with:
+        files: |
+          tests/${{ matrix.test }}/src/**/*.trx
+
+  publish-nuget:
+    runs-on: ubuntu-latest
+    needs: test
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '10.0.x'
+
+    - name: Restore dependencies
+      working-directory: src
+      run: dotnet restore
+
+    - name: Pack
+      working-directory: src
+      run: dotnet pack --no-restore --configuration Release --output ../artifacts
+
+    - name: Publish to NuGet.org
+      run: dotnet nuget push "artifacts/*.nupkg" --api-key "${{ secrets.NUGET_API_KEY }}" --source "https://api.nuget.org/v3/index.json" --skip-duplicate
+
+  publish-changelog:
+    runs-on: ubuntu-latest
+    needs: test
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Extract changelog for tag
+        id: changelog
+        run: |
+          TAG="${GITHUB_REF_NAME}"
+
+          # Escape tag for regex
+          ESCAPED_TAG=$(printf '%s\n' "$TAG" | sed 's/[][\.*^$(){}?+|/]/\\&/g')
+
+          # Extract section starting at "## <tag> - <date>"
+          CONTENT=$(awk -v tag="$ESCAPED_TAG" '
+            BEGIN {found=0}
+            $0 ~ "^## " tag " - " {found=1; next}
+            found && /^## / {exit}
+            found {print}
+          ' CHANGELOG.md)
+
+          if [ -z "$CONTENT" ]; then
+            echo "No changelog section found for tag $TAG"
+            exit 1
+          fi
+
+          # Encode for GitHub output
+          CONTENT="${CONTENT//'%'/'%25'}"
+          CONTENT="${CONTENT//$'\n'/'%0A'}"
+          CONTENT="${CONTENT//$'\r'/'%0D'}"
+
+          echo "content=$CONTENT" >> "$GITHUB_OUTPUT"
+
+      - name: "Create GitHub Release"
+        uses: CSchoel/release-notes-from-changelog@v1
+        with:
+          begin-pattern: '/^## ${RELEASE_VERSION}'
+          link-pattern: '/^## ${RELEASE_VERSION}'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
