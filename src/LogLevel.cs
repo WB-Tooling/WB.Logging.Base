@@ -8,15 +8,15 @@ public enum LogLevel
     /// <summary>
     /// Info level log level.
     /// </summary>
-    Info,
+    Info = 0,
 
     /// <summary>
     /// Warning log level.
     /// </summary>
-    Warning,
+    Warning = 1,
 
     /// <summary>
     /// Error log level.
     /// </summary>
-    Error
+    Error = 2
 }
