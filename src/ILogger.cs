@@ -34,31 +34,6 @@ public interface ILogger : IAsyncDisposable
     public void Log(LogLevel? logLevel, object message);
 
     /// <summary>
-    /// Logs the <paramref name="exception"/>
-    /// </summary>
-    /// <param name="exception">The <see cref="Exception"/> to log.</param>
-    public void Log(Exception exception);
-
-    /// <summary>
-    /// Logs the <paramref name="message"/> at <see cref="LogLevel.Info"/>.
-    /// </summary>
-    /// <param name="message">The message to log.</param>
-    public void Info(object message);
-
-    /// <summary>
-    /// Logs the <paramref name="message"/> at <see cref="LogLevel.Warning"/>.
-    /// </summary>
-    /// <param name="message">The message to log.</param>
-    public void Warning(object message);
-
-    /// <summary>
-    /// Logs the <paramref name="message"/> at <see cref="LogLevel.Error"/>.
-    /// </summary>
-    /// <param name="message">The message to log.</param>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Naming", "CA1716:Identifiers should not match keywords", Justification = "Common logging term.")]
-    public void Error(object message);
-
-    /// <summary>
     /// Flushes all pending log messages.
     /// </summary>
     /// <param name="cancellationToken">A <see cref="CancellationToken"/> to observe while waiting for the flush to complete.</param>

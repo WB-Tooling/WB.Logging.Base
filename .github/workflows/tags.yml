@@ -78,7 +78,7 @@ jobs:
       pull-requests: write
     strategy:
       matrix:
-        test: [ConsoleLogSinkTests, ExtensionsTests, LoggerTests]
+        test: [ILoggerExtensionsTests]
     
     steps:
     - uses: actions/checkout@v4

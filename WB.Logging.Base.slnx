@@ -1,2 +1,10 @@
 <Solution>
+  <Folder Name="/src/">
+    <Project Path="src/WB.Logging.Base.csproj" />
+  </Folder>
+  <Folder Name="/tests/" />
+  <Folder Name="/tests/ILoggerExtensionsTests/" />
+  <Folder Name="/tests/ILoggerExtensionsTests/src/">
+    <Project Path="tests/ILoggerExtensionsTests/src/ILoggerExtensionsTests.csproj" />
+  </Folder>
 </Solution>
