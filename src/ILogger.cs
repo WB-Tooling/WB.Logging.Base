@@ -15,6 +15,16 @@ public interface ILogger : IAsyncDisposable
     // └─────────────────────────────────────────────────────────────────────────────┘
 
     /// <summary>
+    /// Gets the parent <see cref="ILogger"/>.
+    /// </summary>
+    /// <remarks>
+    /// If this logger has a parent logger, log messages submitted to this logger will also be submitted to the parent logger.
+    /// This allows for hierarchical logging, where log messages can be propagated up a chain of log
+    /// loggers, each of which can have its own log sinks and log level filters.
+    /// </remarks>
+    public ILogger? Parent { get; }
+
+    /// <summary>
     /// Gets the list of attached <see cref="ILogSink"/>s.
     /// </summary>
     /// <remarks>
