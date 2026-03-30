@@ -20,7 +20,7 @@ public readonly ref struct LogMessage
     /// <summary>
     /// Gets the senders of the log message.
     /// </summary>
-    required public IReadOnlyList<ILogger> Senders { get; init; }
+    required public IReadOnlyList<string> Senders { get; init; }
 
     /// <summary>
     /// Gets the <see cref="LogLevel"/> of the log message.
