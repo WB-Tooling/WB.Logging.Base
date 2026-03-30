@@ -16,7 +16,7 @@ jobs:
       env:
         PROJECT_NAME: ${{ github.event.repository.name }}
       run: |
-        $version = .github/workflows/scripts/Get-Version.ps1 -FilePath "src/$($env:PROJECT_NAME)"
+        $version = .github/workflows/scripts/Get-Version.ps1 -FilePath "src/$($env:PROJECT_NAME).csproj"
 
         Write-Output "Project version: $version"
         Write-Output "version=$version" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
