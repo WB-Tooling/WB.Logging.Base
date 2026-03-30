@@ -13,5 +13,5 @@ public interface ILogSink
     /// Submits a <see cref="LogMessage"/> to this log sink for processing.
     /// </summary>
     /// <param name="logMessage">The <see cref="LogMessage"/> to submit.</param>
-    public void Submit(LogMessage logMessage);
+    public void Submit(ref LogMessage logMessage);
 }
