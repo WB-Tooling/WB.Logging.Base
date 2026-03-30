@@ -16,7 +16,7 @@ jobs:
       run: |
         $version = .github/workflows/scripts/Get-Version.ps1 -Path "src"
 
-        Write-Output $version
+        Write-Output "Project version: $version"
         Write-Output "version=$version" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
 
     - name: 🟰 Compare tag with csproj version
@@ -24,15 +24,11 @@ jobs:
       run: |
         $tag = $env:GITHUB_REF_NAME
 
-        # Strip leading 'v'
-        $cleanTag = $tag.TrimStart('v')
-
         $csprojVersion = "${{ steps.csproj.outputs.version }}"
 
-        if ($cleanTag -ne $csprojVersion) {
+        if ($tag. -ne $csprojVersion) {
             Write-Output "Version mismatch:"
             Write-Output "  Tag:      $tag"
-            Write-Output "  CleanTag: $cleanTag"
             Write-Output "  csproj:   $csprojVersion"
             exit 1
         }
