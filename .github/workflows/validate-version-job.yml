@@ -27,31 +27,28 @@ jobs:
           $file = Get-ChildItem -Path . -Filter $pattern -Recurse -Depth 2 | Select-Object -First 1
 
           if ($file) {
-              $foundFile = $file
-              break
+            Write-Output "Checking file: $($file.FullName)"
+
+            # Extract <Version> tag
+            $xml = [xml](Get-Content -Path $file.FullName -Raw)
+            $version = $xml.Project.PropertyGroup.Version
+
+            if ($version) {
+              Write-Output "Found version: $version"
+
+              # Write to GitHub output
+              "version=$version" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
+
+              exit 0
+            } else {
+              Write-Output "No <Version> tag found in $($file.FullName)"
+            }
+          } else {
+            Write-Output "No file found matching pattern: $pattern"
           }
         }
-
-        if (-not $foundFile) {
-          Write-Output "No matching csproj file found"
-          exit 1
-        }
-
-        Write-Output "Found csproj: $($foundFile.FullName)"
-
-        # Extract <Version> tag
-        $xml = [xml](Get-Content -Path $foundFile.FullName -Raw)
-        $version = $xml.Project.PropertyGroup.Version
-
-        if (-not $version) {
-          Write-Output "No <Version> tag found in $($foundFile.FullName)"
-          exit 1
-        }
-
-        Write-Output "Found version: $version"
-
-        # Write to GitHub output
-        "version=$version" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
+        
+        exit 1
 
     - name: 🟰 Compare tag with csproj version
       shell: pwsh
