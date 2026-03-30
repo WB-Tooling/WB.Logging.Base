@@ -1,4 +1,4 @@
-using Moq;
+using FakeItEasy;
 using WB.Logging;
 
 namespace ILoggerExtensionsTests.MethodTests.InfoMethodTests;
@@ -9,15 +9,15 @@ public sealed class TheInfoMethod
     public void ShouldLogAMessageWithTheInfoLogLevel()
     {
         // Arrange
-        Mock<ILogger> loggerMock = new();
+       ILogger logger = A.Fake<ILogger>();
 
         // Act
-        loggerMock.Object.Info("Test");
+        logger.Info("Test");
 
         // Assert
-        loggerMock.Verify(l => l.Log(
+        A.CallTo(() => logger.Log(
             LogLevel.Info,
-            It.IsAny<object>()),
-        Times.Once);
+            A<object>.Ignored))
+        .MustHaveHappenedOnceExactly();
     }
 }

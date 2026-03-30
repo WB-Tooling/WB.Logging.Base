@@ -1,5 +1,5 @@
 using System;
-using Moq;
+using FakeItEasy;
 using WB.Logging;
 
 namespace ILoggerExtensionsTests.MethodTests.ExceptionMethodTests;
@@ -10,16 +10,16 @@ public sealed class TheExceptionMethod
     public void ShouldLogAMessageWithTheExceptionLogLevel()
     {
         // Arrange
-        Mock<ILogger> loggerMock = new();
+        ILogger logger = A.Fake<ILogger>();
         InvalidOperationException exception = new("Test");
 
         // Act
-        loggerMock.Object.Exception(exception);
+        logger.Exception(exception);
 
         // Assert
-        loggerMock.Verify(l => l.Log(
+        A.CallTo(() => logger.Log(
             null,
-            exception),
-        Times.Once);
+            exception))
+        .MustHaveHappenedOnceExactly();
     }
 }

@@ -1,43 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <!-- ╭──────────────────────────────────────────────────────────────────────╮
-       │ Target Framework                                                     │
+       │ Documentation                                                        │
        ╰──────────────────────────────────────────────────────────────────────╯ -->
   <PropertyGroup>
-    <TargetFramework>net10.0</TargetFramework>
-  </PropertyGroup>
-
-  <!-- ╭──────────────────────────────────────────────────────────────────────╮
-       │ Version                                                              │
-       ╰──────────────────────────────────────────────────────────────────────╯ -->
-  <PropertyGroup>
-    <Version>1.0.0-preview.2</Version>
-  </PropertyGroup>
-
-  <!-- ╭──────────────────────────────────────────────────────────────────────╮
-       │ Package Info.                                                        │
-       ╰──────────────────────────────────────────────────────────────────────╯ -->
-  <PropertyGroup>
-    <Authors>Wolf Bublitz</Authors>
-    <Description>The base library for WB.Logging.</Description>
-    <PackageTags>logger, logging, .NET</PackageTags>
-    <PackageProjectUrl>https://github.com/WolfBublitz/WB.Logging.Base</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/WolfBublitz/WB.Logging.Base</RepositoryUrl>
-    <RepositoryType>git</RepositoryType>
-  </PropertyGroup>
-
-  <!-- ╭──────────────────────────────────────────────────────────────────────╮
-       │ Build Settings                                                       │
-       ╰──────────────────────────────────────────────────────────────────────╯ -->
-  <PropertyGroup>
-    <IncludeSymbols>true</IncludeSymbols>
-    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-    <PublishRepositoryUrl>true</PublishRepositoryUrl>
-    <EmbedUntrackedSources>true</EmbedUntrackedSources>
-    <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild> 
-    <Deterministic>true</Deterministic>
-    <InvariantGlobalization>true</InvariantGlobalization>
-    <Nullable>enable</Nullable>
+      <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
   <!-- ╭──────────────────────────────────────────────────────────────────────╮
@@ -49,15 +16,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Roslynator.Analyzers">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="Roslynator.CodeAnalysis.Analyzers">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="Roslynator.Formatting.Analyzers">
+    <PackageReference Include="WB.CodeAnalyzer">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
@@ -73,28 +32,6 @@
   </PropertyGroup>
 
   <!-- ╭──────────────────────────────────────────────────────────────────────╮
-       │ README                                                               │
-       ╰──────────────────────────────────────────────────────────────────────╯ -->
-  <PropertyGroup>
-    <PackageReadmeFile>README.md</PackageReadmeFile>
-  </PropertyGroup>
-
-  <ItemGroup>
-    <None Include="$(MSBuildThisFileDirectory)../README.md" Pack="true" PackagePath=""/>
-  </ItemGroup>
-
-  <!-- ╭──────────────────────────────────────────────────────────────────────╮
-       │ LICENSE                                                              │
-       ╰──────────────────────────────────────────────────────────────────────╯ -->
-  <PropertyGroup>
-    <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
-  </PropertyGroup>
-
-  <ItemGroup>
-    <None Include="$(MSBuildThisFileDirectory)../LICENSE.txt" Pack="true" PackagePath=""/>
-  </ItemGroup>
-
-  <!-- ╭──────────────────────────────────────────────────────────────────────╮
        │ SourceLink                                                           │
        ╰──────────────────────────────────────────────────────────────────────╯ -->
   <ItemGroup> 
@@ -104,7 +41,13 @@
   <!-- ╭──────────────────────────────────────────────────────────────────────╮
        │ Package References                                                   │
        ╰──────────────────────────────────────────────────────────────────────╯ -->
-  <ItemGroup>
+  <ItemGroup Condition="'$(SourceBuild)' != 'true'">
+  </ItemGroup>
+
+  <!-- ╭──────────────────────────────────────────────────────────────────────╮
+       │ Project References                                                   │
+       ╰──────────────────────────────────────────────────────────────────────╯ -->
+  <ItemGroup Condition="'$(SourceBuild)' == 'true'">
   </ItemGroup>
 
 </Project>

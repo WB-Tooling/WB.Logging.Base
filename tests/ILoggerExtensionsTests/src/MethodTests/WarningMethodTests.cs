@@ -1,4 +1,4 @@
-using Moq;
+using FakeItEasy;
 using WB.Logging;
 
 namespace ILoggerExtensionsTests.MethodTests.WarningMethodTests;
@@ -9,15 +9,15 @@ public sealed class TheWarningMethod
     public void ShouldLogAMessageWithTheWarningLogLevel()
     {
         // Arrange
-        Mock<ILogger> loggerMock = new();
+        ILogger logger = A.Fake<ILogger>();
 
         // Act
-        loggerMock.Object.Warning("Test");
+        logger.Warning("Test");
 
         // Assert
-        loggerMock.Verify(l => l.Log(
+        A.CallTo(() => logger.Log(
             LogLevel.Warning,
-            It.IsAny<object>()),
-        Times.Once);
+            A<object>.Ignored))
+        .MustHaveHappenedOnceExactly();
     }
 }

@@ -10,7 +10,7 @@ namespace WB.Logging;
 /// <param name="Senders">The senders of the log message.</param>
 /// <param name="LogLevel">The <see cref="LogLevel"/> of the log message.</param>
 /// <param name="Message">The message.</param>
-public readonly record struct LogMessage(
+public readonly ref struct LogMessage(
     DateTimeOffset Timestamp,
     IReadOnlyList<string> Senders,
     LogLevel? LogLevel,

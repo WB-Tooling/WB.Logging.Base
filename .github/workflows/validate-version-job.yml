@@ -1,0 +1,74 @@
+name: Validate Version
+
+on:
+  workflow_call:
+
+jobs:
+  validate-version:
+    runs-on: ubuntu-latest
+    steps:
+    - name: 🗃️ Checkout
+      uses: actions/checkout@v4
+
+    - name: ⛏️ Extract version from csproj
+      id: csproj
+      shell: pwsh
+      run: |
+        $filesToCheck = @(
+          "${{ github.event.repository.name }}.csproj"
+          "Directory.Build.props"
+          "src/${{ github.event.repository.name }}.csproj"
+        )
+
+        # Find first existing file (maxdepth 2)
+        $foundFile = $null
+
+        foreach ($pattern in $filesToCheck) {
+          $file = Get-ChildItem -Path . -Filter $pattern -Recurse -Depth 2 | Select-Object -First 1
+
+          if ($file) {
+              $foundFile = $file
+              break
+          }
+        }
+
+        if (-not $foundFile) {
+          Write-Output "No matching csproj file found"
+          exit 1
+        }
+
+        Write-Output "Found csproj: $($foundFile.FullName)"
+
+        # Extract <Version> tag
+        $xml = [xml](Get-Content -Path $foundFile.FullName -Raw)
+        $version = $xml.Project.PropertyGroup.Version
+
+        if (-not $version) {
+          Write-Output "No <Version> tag found in $($foundFile.FullName)"
+          exit 1
+        }
+
+        Write-Output "Found version: $version"
+
+        # Write to GitHub output
+        "version=$version" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
+
+    - name: 🟰 Compare tag with csproj version
+      shell: pwsh
+      run: |
+        $tag = $env:GITHUB_REF_NAME
+
+        # Strip leading 'v'
+        $cleanTag = $tag.TrimStart('v')
+
+        $csprojVersion = "${{ steps.csproj.outputs.version }}"
+
+        if ($cleanTag -ne $csprojVersion) {
+            Write-Output "Version mismatch:"
+            Write-Output "  Tag:      $tag"
+            Write-Output "  CleanTag: $cleanTag"
+            Write-Output "  csproj:   $csprojVersion"
+            exit 1
+        }
+
+        

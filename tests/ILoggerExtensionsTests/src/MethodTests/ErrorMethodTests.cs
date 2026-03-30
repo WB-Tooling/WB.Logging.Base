@@ -1,4 +1,4 @@
-using Moq;
+using FakeItEasy;
 using WB.Logging;
 
 namespace ILoggerExtensionsTests.MethodTests.ErrorMethodTests;
@@ -9,15 +9,15 @@ public sealed class TheErrorMethod
     public void ShouldLogAMessageWithTheErrorLogLevel()
     {
         // Arrange
-        Mock<ILogger> loggerMock = new();
+        ILogger logger = A.Fake<ILogger>();
 
         // Act
-        loggerMock.Object.Error("Test");
+        logger.Error("Test");
 
         // Assert
-        loggerMock.Verify(l => l.Log(
+        A.CallTo(() => logger.Log(
             LogLevel.Error,
-            It.IsAny<object>()),
-        Times.Once);
+            A<object>.Ignored))
+        .MustHaveHappenedOnceExactly();
     }
 }
