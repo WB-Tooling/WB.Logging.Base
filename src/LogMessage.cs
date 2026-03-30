@@ -6,12 +6,29 @@ namespace WB.Logging;
 /// <summary>
 /// A log message.
 /// </summary>
-/// <param name="Timestamp">The timestamp of the log message.</param>
-/// <param name="Senders">The senders of the log message.</param>
-/// <param name="LogLevel">The <see cref="LogLevel"/> of the log message.</param>
-/// <param name="Message">The message.</param>
-public readonly ref struct LogMessage(
-    DateTimeOffset Timestamp,
-    IReadOnlyList<string> Senders,
-    LogLevel? LogLevel,
-    object Message);
+public readonly ref struct LogMessage
+{
+    // ┌─────────────────────────────────────────────────────────────────────────────┐
+    // │ Public Properties                                                           │
+    // └─────────────────────────────────────────────────────────────────────────────┘
+
+    /// <summary>
+    /// Gets the timestamp of the log message.
+    /// </summary>
+    required public DateTimeOffset Timestamp { get; init; }
+
+    /// <summary>
+    /// Gets the senders of the log message.
+    /// </summary>
+    required public IReadOnlyList<ILogger> Senders { get; init; }
+
+    /// <summary>
+    /// Gets the <see cref="LogLevel"/> of the log message.
+    /// </summary>
+    public LogLevel? LogLevel { get; init; }
+
+    /// <summary> 
+    /// Gets the message object of the log message.
+    /// </summary>
+    public object? Message { get; init; }
+}
