@@ -13,9 +13,7 @@ jobs:
     - name: 🧐 Checking Project Version
       id: csproj
       shell: pwsh
-      env:
-        PROJECT_NAME: ${{ github.event.repository.name }}
       run: |
-        $version = .github/workflows/scripts/Check-Version.ps1 -FilePath "Directory.Build.props" -ExpectedVersion $GITHUB_REF_NAME
+        $version = .github/workflows/scripts/Check-Version.ps1 -FilePath "Directory.Build.props" -ExpectedVersion $env:GITHUB_REF_NAME
 
         
