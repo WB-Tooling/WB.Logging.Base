@@ -14,41 +14,10 @@ jobs:
       id: csproj
       shell: pwsh
       run: |
-        $filesToCheck = @(
-          "${{ github.event.repository.name }}.csproj"
-          "Directory.Build.props"
-          "src/${{ github.event.repository.name }}.csproj"
-        )
+        $version = .github/workflows/scripts/Get-Version.ps1 -Path "src"
 
-        # Find first existing file (maxdepth 2)
-        $foundFile = $null
-
-        foreach ($pattern in $filesToCheck) {
-          $file = Get-ChildItem -Path . -Filter $pattern -Recurse -Depth 2 | Select-Object -First 1
-
-          if ($file) {
-            Write-Output "Checking file: $($file.FullName)"
-
-            # Extract <Version> tag
-            $xml = [xml](Get-Content -Path $file.FullName -Raw)
-            $version = $xml.Project.PropertyGroup.Version
-
-            if ($version) {
-              Write-Output "Found version: $version"
-
-              # Write to GitHub output
-              "version=$version" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
-
-              exit 0
-            } else {
-              Write-Output "No <Version> tag found in $($file.FullName)"
-            }
-          } else {
-            Write-Output "No file found matching pattern: $pattern"
-          }
-        }
-        
-        exit 1
+        Write-Output $version
+        Write-Output "version=$version" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
 
     - name: 🟰 Compare tag with csproj version
       shell: pwsh
