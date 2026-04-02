@@ -23,28 +23,28 @@ public static class ILoggerExtensions
         }
 
         /// <summary>
-        /// Logs the <paramref name="message"/> at <see cref="LogLevel.Info"/>.
+        /// Logs the <paramref name="payload"/> at <see cref="LogLevel.Info"/>.
         /// </summary>
-        /// <param name="message">The message to log.</param>
+        /// <param name="payload">The payload to log.</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void Info(object message)
-            => @this.Log(LogLevel.Info, message);
+        public void Info<TPayload>(TPayload payload)
+            => @this.Log(LogLevel.Info, payload);
 
         /// <summary>
-        /// Logs the <paramref name="message"/> at <see cref="LogLevel.Warning"/>.
+        /// Logs the <paramref name="payload"/> at <see cref="LogLevel.Warning"/>.
         /// </summary>
-        /// <param name="message">The message to log.</param>
+        /// <param name="payload">The payload to log.</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void Warning(object message)
-            => @this.Log(LogLevel.Warning, message);
+        public void Warning<TPayload>(TPayload payload)
+            => @this.Log(LogLevel.Warning, payload);
 
         /// <summary>
-        /// Logs the <paramref name="message"/> at <see cref="LogLevel.Error"/>.
+        /// Logs the <paramref name="payload"/> at <see cref="LogLevel.Error"/>.
         /// </summary>
-        /// <param name="message">The message to log.</param>
+        /// <param name="payload">The payload to log.</param>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Naming", "CA1716:Identifiers should not match keywords", Justification = "Common logging term.")]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void Error(object message)
-            => @this.Log(LogLevel.Error, message);
+        public void Error<TPayload>(TPayload payload)
+            => @this.Log(LogLevel.Error, payload);
     }
 }

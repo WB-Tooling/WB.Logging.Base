@@ -36,7 +36,14 @@
        ╰──────────────────────────────────────────────────────────────────────╯ -->
   <ItemGroup> 
     <PackageReference Include="Microsoft.SourceLink.GitHub" PrivateAssets="All" />
-  </ItemGroup>
+  </ItemGroup> 
+  
+  <PropertyGroup Condition="'$(Configuration)'=='Debug'">
+      <EnableSourceLink>false</EnableSourceLink>
+      <PublishRepositoryUrl>false</PublishRepositoryUrl>
+      <EmbedUntrackedSources>false</EmbedUntrackedSources>
+  </PropertyGroup>
+
 
   <!-- ╭──────────────────────────────────────────────────────────────────────╮
        │ Package References                                                   │

@@ -51,7 +51,13 @@
         <WarningsAsErrors>nullable</WarningsAsErrors>
     </PropertyGroup>
 
-  <!-- ╭──────────────────────────────────────────────────────────────────────╮
+     <PropertyGroup Condition="'$(Configuration)'=='Debug'">
+          <EnableSourceLink>false</EnableSourceLink>
+          <PublishRepositoryUrl>false</PublishRepositoryUrl>
+          <EmbedUntrackedSources>false</EmbedUntrackedSources>
+     </PropertyGroup>
+
+     <!-- ╭──────────────────────────────────────────────────────────────────────╮
        │ README                                                               │
        ╰──────────────────────────────────────────────────────────────────────╯ -->
   <PropertyGroup>
@@ -62,7 +68,7 @@
     <None Include="$(MSBuildThisFileDirectory)README.md" Pack="true" PackagePath=""/>
   </ItemGroup>
 
-  <!-- ╭──────────────────────────────────────────────────────────────────────╮
+     <!-- ╭──────────────────────────────────────────────────────────────────────╮
        │ LICENSE                                                              │
        ╰──────────────────────────────────────────────────────────────────────╯ -->
   <ItemGroup>

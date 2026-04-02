@@ -37,11 +37,11 @@ public interface ILogger : IAsyncDisposable
     // └─────────────────────────────────────────────────────────────────────────────┘
 
     /// <summary>
-    /// Logs a <paramref name="message"/> at the specified <paramref name="logLevel"/>.
+    /// Logs a <paramref name="payload"/> at the specified <paramref name="logLevel"/>.
     /// </summary>
     /// <param name="logLevel">The <see cref="LogLevel"/>.</param>
-    /// <param name="message">The message to log.</param>
-    public void Log(LogLevel? logLevel, object message);
+    /// <param name="payload">The payload to log.</param>
+    public void Log<TPayload>(LogLevel? logLevel, TPayload payload);
 
     /// <summary>
     /// Flushes all pending log messages.
@@ -56,4 +56,12 @@ public interface ILogger : IAsyncDisposable
     /// <param name="logSink">The <see cref="ILogSink"/> to attach.</param>
     /// <returns>An <see cref="IDisposable"/> that can be used to detach the log sink.</returns>
     public IDisposable AttachLogSink(ILogSink logSink);
+
+    /// <summary>
+    /// Creates and returns a child logger with the specified <paramref name="name"/>. 
+    /// The child <see cref="ILogger"/> will have this <see cref="ILogger"/> as its <see cref="Parent"/>.
+    /// </summary>
+    /// <param name="name">The name of the child logger.</param>
+    /// <returns>The created child <see cref="ILogger"/>.</returns>
+    public ILogger CreateChildLogger(string name);
 }
