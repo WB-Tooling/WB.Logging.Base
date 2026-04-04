@@ -15,6 +15,11 @@ public interface ILogger : IAsyncDisposable
     // └─────────────────────────────────────────────────────────────────────────────┘
 
     /// <summary>
+    /// Gets the name of the logger.
+    /// </summary>
+    public string Name { get; }
+
+    /// <summary>
     /// Gets the parent <see cref="ILogger"/>.
     /// </summary>
     /// <remarks>
@@ -31,6 +36,11 @@ public interface ILogger : IAsyncDisposable
     /// The log sinks in this list will receive all log messages submitted to this logger.
     /// </remarks>
     public IReadOnlyList<ILogSink> LogSinks { get; }
+
+    /// <summary>
+    /// Gets the minimum <see cref="LogLevel"/> for <see cref="ILogMessage{TPayload}"/>s.
+    /// </summary>
+    public LogLevel? MinimumLogLevel { get; set; }
 
     // ┌─────────────────────────────────────────────────────────────────────────────┐
     // │ Public Methods.                                                             │

@@ -3,10 +3,11 @@ using System.Collections.Generic;
 
 namespace WB.Logging;
 
+
 /// <summary>
 /// A log message.
 /// </summary>
-public readonly record struct LogMessage<TPayload>
+public interface ILogMessage<out TPayload>
 {
     // ┌─────────────────────────────────────────────────────────────────────────────┐
     // │ Public Properties                                                           │
@@ -15,20 +16,20 @@ public readonly record struct LogMessage<TPayload>
     /// <summary>
     /// Gets the timestamp of the log message.
     /// </summary>
-    public required DateTimeOffset Timestamp { get; init; }
+    public DateTimeOffset Timestamp { get; }
 
     /// <summary>
     /// Gets the senders of the log message.
     /// </summary>
-    public required IReadOnlyList<string> Senders { get; init; }
+    public IReadOnlyList<string> Senders { get; }
 
     /// <summary>
     /// Gets the <see cref="LogLevel"/> of the log message.
     /// </summary>
-    public LogLevel? LogLevel { get; init; }
+    public LogLevel? LogLevel { get; }
 
     /// <summary>
     /// Gets the payload of the log message.
     /// </summary>
-    public TPayload? Payload { get; init; }
+    public TPayload? Payload { get; }
 }

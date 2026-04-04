@@ -14,5 +14,5 @@ public interface ILogSink
     /// </summary>
     /// <param name="logMessage">The <see cref="LogMessage{TPayload}"/> to submit.</param>
     /// <typeparam name="TPayload">The type of the payload of the log message.</typeparam>
-    public void Submit<TPayload>(LogMessage<TPayload> logMessage);
+    public void Submit<TPayload>(ILogMessage<TPayload> logMessage);
 }

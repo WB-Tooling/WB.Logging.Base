@@ -26,23 +26,6 @@
     </PropertyGroup>
 
     <!-- ╭──────────────────────────────────────────────────────────────────────╮
-         │ Deterministic Builds                                                 │
-         ╰──────────────────────────────────────────────────────────────────────╯ -->
-    <PropertyGroup>
-        <Deterministic>true</Deterministic>
-        <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
-    </PropertyGroup>
-
-    <!-- ╭──────────────────────────────────────────────────────────────────────╮
-         │ Debug Settings                                                       │
-         ╰──────────────────────────────────────────────────────────────────────╯ -->
-    <PropertyGroup>
-        <DebugType>portable</DebugType>
-        <DebugSymbols>true</DebugSymbols>
-        <EmbedUntrackedSources>true</EmbedUntrackedSources>
-    </PropertyGroup>
-
-    <!-- ╭──────────────────────────────────────────────────────────────────────╮
          │ Nullability Settings                                                 │
          ╰──────────────────────────────────────────────────────────────────────╯ -->
     <PropertyGroup>
@@ -50,14 +33,8 @@
         <Nullable>enable</Nullable>
         <WarningsAsErrors>nullable</WarningsAsErrors>
     </PropertyGroup>
-
-     <PropertyGroup Condition="'$(Configuration)'=='Debug'">
-          <EnableSourceLink>false</EnableSourceLink>
-          <PublishRepositoryUrl>false</PublishRepositoryUrl>
-          <EmbedUntrackedSources>false</EmbedUntrackedSources>
-     </PropertyGroup>
-
-     <!-- ╭──────────────────────────────────────────────────────────────────────╮
+    
+  <!-- ╭──────────────────────────────────────────────────────────────────────╮
        │ README                                                               │
        ╰──────────────────────────────────────────────────────────────────────╯ -->
   <PropertyGroup>
@@ -67,7 +44,6 @@
   <ItemGroup>
     <None Include="$(MSBuildThisFileDirectory)README.md" Pack="true" PackagePath=""/>
   </ItemGroup>
-
      <!-- ╭──────────────────────────────────────────────────────────────────────╮
        │ LICENSE                                                              │
        ╰──────────────────────────────────────────────────────────────────────╯ -->
