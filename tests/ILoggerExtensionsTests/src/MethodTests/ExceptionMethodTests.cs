@@ -19,7 +19,7 @@ public sealed class TheExceptionMethod
         // Assert
         A.CallTo(() => logger.Log(
             null,
-            exception))
+            A<Exception>.That.Matches(e => e == exception)))
         .MustHaveHappenedOnceExactly();
     }
 }

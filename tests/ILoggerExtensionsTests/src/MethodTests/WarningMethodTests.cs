@@ -17,7 +17,7 @@ public sealed class TheWarningMethod
         // Assert
         A.CallTo(() => logger.Log(
             LogLevel.Warning,
-            A<object>.Ignored))
+            A<string>.Ignored))
         .MustHaveHappenedOnceExactly();
     }
 }

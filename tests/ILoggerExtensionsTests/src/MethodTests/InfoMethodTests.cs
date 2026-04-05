@@ -17,7 +17,7 @@ public sealed class TheInfoMethod
         // Assert
         A.CallTo(() => logger.Log(
             LogLevel.Info,
-            A<object>.Ignored))
+            A<string>.Ignored))
         .MustHaveHappenedOnceExactly();
     }
 }
