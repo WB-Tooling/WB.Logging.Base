@@ -17,7 +17,7 @@ public sealed class TheErrorMethod
         // Assert
         A.CallTo(() => logger.Log(
             LogLevel.Error,
-            A<object>.Ignored))
+            A<string>.Ignored))
         .MustHaveHappenedOnceExactly();
     }
 }

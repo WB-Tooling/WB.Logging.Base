@@ -22,24 +22,7 @@
          │ Version                                                              │
          ╰──────────────────────────────────────────────────────────────────────╯ -->
     <PropertyGroup>
-        <Version>1.0.0-preview.4</Version>
-    </PropertyGroup>
-
-    <!-- ╭──────────────────────────────────────────────────────────────────────╮
-         │ Deterministic Builds                                                 │
-         ╰──────────────────────────────────────────────────────────────────────╯ -->
-    <PropertyGroup>
-        <Deterministic>true</Deterministic>
-        <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
-    </PropertyGroup>
-
-    <!-- ╭──────────────────────────────────────────────────────────────────────╮
-         │ Debug Settings                                                       │
-         ╰──────────────────────────────────────────────────────────────────────╯ -->
-    <PropertyGroup>
-        <DebugType>portable</DebugType>
-        <DebugSymbols>true</DebugSymbols>
-        <EmbedUntrackedSources>true</EmbedUntrackedSources>
+        <Version>1.0.0-preview.5</Version>
     </PropertyGroup>
 
     <!-- ╭──────────────────────────────────────────────────────────────────────╮
@@ -50,13 +33,7 @@
         <Nullable>enable</Nullable>
         <WarningsAsErrors>nullable</WarningsAsErrors>
     </PropertyGroup>
-
-     <PropertyGroup Condition="'$(Configuration)'=='Debug'">
-          <EnableSourceLink>false</EnableSourceLink>
-          <PublishRepositoryUrl>false</PublishRepositoryUrl>
-          <EmbedUntrackedSources>false</EmbedUntrackedSources>
-     </PropertyGroup>
-
+    
   <!-- ╭──────────────────────────────────────────────────────────────────────╮
        │ README                                                               │
        ╰──────────────────────────────────────────────────────────────────────╯ -->
@@ -67,7 +44,6 @@
   <ItemGroup>
     <None Include="$(MSBuildThisFileDirectory)README.md" Pack="true" PackagePath=""/>
   </ItemGroup>
-
      <!-- ╭──────────────────────────────────────────────────────────────────────╮
        │ LICENSE                                                              │
        ╰──────────────────────────────────────────────────────────────────────╯ -->
