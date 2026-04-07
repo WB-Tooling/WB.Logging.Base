@@ -8,7 +8,9 @@ namespace WB.Logging;
 /// </summary>
 public static class ILoggerExtensions
 {
+#pragma warning disable CA1034 // Nested types should not be visible
     extension(ILogger @this)
+#pragma warning restore CA1034 // Nested types should not be visible
     {
         /// <summary>
         /// Logs the <paramref name="exception"/>
