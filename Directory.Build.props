@@ -26,8 +26,8 @@
   </PropertyGroup>
 
   <!-- ╭──────────────────────────────────────────────────────────────────────╮
-        │ Nullability Settings                                                 │
-        ╰──────────────────────────────────────────────────────────────────────╯ -->
+       │ Nullability Settings                                                 │
+       ╰──────────────────────────────────────────────────────────────────────╯ -->
   <PropertyGroup>
       <LangVersion>latest</LangVersion>
       <Nullable>enable</Nullable>
