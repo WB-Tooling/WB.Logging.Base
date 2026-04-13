@@ -19,8 +19,8 @@
   </PropertyGroup>
 
   <!-- ╭──────────────────────────────────────────────────────────────────────╮
-        │ Version                                                              │
-        ╰──────────────────────────────────────────────────────────────────────╯ -->
+       │ Version                                                              │
+       ╰──────────────────────────────────────────────────────────────────────╯ -->
   <PropertyGroup>
       <Version>1.0.0-preview.6</Version>
   </PropertyGroup>
@@ -53,10 +53,10 @@
   </ItemGroup>
 
   <!-- ╭──────────────────────────────────────────────────────────────────────╮
-       │ Paths                                                                │
+       │ Directories                                                          │
        ╰──────────────────────────────────────────────────────────────────────╯ -->
   <PropertyGroup>
-    <PathToLocalProjects>$(MSBuildThisFileDirectory)..</PathToLocalProjects>
+    <PathToLocalProjects>$(MSBuildThisFileDirectory)deps/</PathToLocalProjects>
   </PropertyGroup>
 
 </Project>
