@@ -1,10 +1,10 @@
 <Project>
-    <!-- ╭──────────────────────────────────────────────────────────────────────╮
-         │ Target Framework                                                     │
-         ╰──────────────────────────────────────────────────────────────────────╯ -->
-    <PropertyGroup>
-        <TargetFramework>net10.0</TargetFramework>
-    </PropertyGroup>
+  <!-- ╭──────────────────────────────────────────────────────────────────────╮
+       │ Target Framework                                                     │
+       ╰──────────────────────────────────────────────────────────────────────╯ -->
+  <PropertyGroup>
+      <TargetFramework>net10.0</TargetFramework>
+  </PropertyGroup>
 
   <!-- ╭──────────────────────────────────────────────────────────────────────╮
        │ Package Info.                                                        │
@@ -18,21 +18,21 @@
     <RepositoryType>git</RepositoryType>
   </PropertyGroup>
 
-    <!-- ╭──────────────────────────────────────────────────────────────────────╮
-         │ Version                                                              │
-         ╰──────────────────────────────────────────────────────────────────────╯ -->
-    <PropertyGroup>
-        <Version>1.0.0-preview.6</Version>
-    </PropertyGroup>
+  <!-- ╭──────────────────────────────────────────────────────────────────────╮
+        │ Version                                                              │
+        ╰──────────────────────────────────────────────────────────────────────╯ -->
+  <PropertyGroup>
+      <Version>1.0.0-preview.6</Version>
+  </PropertyGroup>
 
-    <!-- ╭──────────────────────────────────────────────────────────────────────╮
-         │ Nullability Settings                                                 │
-         ╰──────────────────────────────────────────────────────────────────────╯ -->
-    <PropertyGroup>
-        <LangVersion>latest</LangVersion>
-        <Nullable>enable</Nullable>
-        <WarningsAsErrors>nullable</WarningsAsErrors>
-    </PropertyGroup>
+  <!-- ╭──────────────────────────────────────────────────────────────────────╮
+        │ Nullability Settings                                                 │
+        ╰──────────────────────────────────────────────────────────────────────╯ -->
+  <PropertyGroup>
+      <LangVersion>latest</LangVersion>
+      <Nullable>enable</Nullable>
+      <WarningsAsErrors>nullable</WarningsAsErrors>
+  </PropertyGroup>
     
   <!-- ╭──────────────────────────────────────────────────────────────────────╮
        │ README                                                               │
@@ -44,11 +44,19 @@
   <ItemGroup>
     <None Include="$(MSBuildThisFileDirectory)README.md" Pack="true" PackagePath=""/>
   </ItemGroup>
-     <!-- ╭──────────────────────────────────────────────────────────────────────╮
+
+  <!-- ╭──────────────────────────────────────────────────────────────────────╮
        │ LICENSE                                                              │
        ╰──────────────────────────────────────────────────────────────────────╯ -->
   <ItemGroup>
     <None Include="$(MSBuildThisFileDirectory)LICENSE.txt" Pack="true" PackagePath=""/>
   </ItemGroup>
+
+  <!-- ╭──────────────────────────────────────────────────────────────────────╮
+       │ Paths                                                                │
+       ╰──────────────────────────────────────────────────────────────────────╯ -->
+  <PropertyGroup>
+    <PathToLocalProjects>$(MSBuildThisFileDirectory)..</PathToLocalProjects>
+  </PropertyGroup>
 
 </Project>

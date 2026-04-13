@@ -72,13 +72,13 @@
   <!-- ╭──────────────────────────────────────────────────────────────────────╮
        │ Package References                                                   │
        ╰──────────────────────────────────────────────────────────────────────╯ -->
-  <ItemGroup Condition="'$(SourceBuild)' != 'true'">
+  <ItemGroup Condition="'$(UseLocalProjects)' != 'true'">
   </ItemGroup>
 
   <!-- ╭──────────────────────────────────────────────────────────────────────╮
        │ Project References                                                   │
        ╰──────────────────────────────────────────────────────────────────────╯ -->
-  <ItemGroup Condition="'$(SourceBuild)' == 'true'">
+  <ItemGroup Condition="'$(UseLocalProjects)' == 'true'">
   </ItemGroup>
 
 </Project>
