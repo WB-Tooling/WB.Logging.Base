@@ -68,6 +68,13 @@ public interface ILogger : IAsyncDisposable
     public IDisposable AttachLogSink(ILogSink logSink);
 
     /// <summary>
+    /// Attaches a <see cref="IAsyncLogSink"/> to this logger. The log sink will receive all log messages submitted to this logger.
+    /// </summary>
+    /// <param name="logSink">The <see cref="IAsyncLogSink"/> to attach.</param>
+    /// <returns>An <see cref="IAsyncDisposable"/> that can be used to detach the log sink.</returns>
+    public IAsyncDisposable AttachLogSink(IAsyncLogSink logSink);
+
+    /// <summary>
     /// Creates and returns a child logger with the specified <paramref name="name"/>. 
     /// The child <see cref="ILogger"/> will have this <see cref="ILogger"/> as its <see cref="Parent"/>.
     /// </summary>
