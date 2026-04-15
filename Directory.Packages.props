@@ -6,6 +6,7 @@
   <ItemGroup>
     <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="10.0.201" />
     <PackageVersion Include="WB.CodeAnalyzer" Version="1.0.0" />
+    <PackageVersion Include="MinVer" Version="7.0.0" />
 
     <PackageVersion Include="AwesomeAssertions" Version="9.4.0" />
     <PackageVersion Include="AwesomeAssertions.Analyzers" Version="9.0.8" />
