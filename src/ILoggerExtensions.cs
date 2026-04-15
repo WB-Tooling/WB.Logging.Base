@@ -30,6 +30,7 @@ public static class ILoggerExtensions
         /// <param name="payload">The payload to log.</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void Info<TPayload>(TPayload payload)
+            where TPayload : notnull
             => @this.Log(LogLevel.Info, payload);
 
         /// <summary>
@@ -38,6 +39,7 @@ public static class ILoggerExtensions
         /// <param name="payload">The payload to log.</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void Warning<TPayload>(TPayload payload)
+            where TPayload : notnull
             => @this.Log(LogLevel.Warning, payload);
 
         /// <summary>
@@ -47,6 +49,7 @@ public static class ILoggerExtensions
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Naming", "CA1716:Identifiers should not match keywords", Justification = "Common logging term.")]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void Error<TPayload>(TPayload payload)
+            where TPayload : notnull
             => @this.Log(LogLevel.Error, payload);
     }
 }

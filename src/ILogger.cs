@@ -51,7 +51,8 @@ public interface ILogger : IAsyncDisposable
     /// </summary>
     /// <param name="logLevel">The <see cref="LogLevel"/>.</param>
     /// <param name="payload">The payload to log.</param>
-    public void Log<TPayload>(LogLevel? logLevel, TPayload payload);
+    public void Log<TPayload>(LogLevel? logLevel, TPayload payload)
+        where TPayload : notnull;
 
     /// <summary>
     /// Flushes all pending log messages.

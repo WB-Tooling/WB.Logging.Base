@@ -17,5 +17,6 @@ public interface IAsyncLogSink
     /// <param name="logMessage">The <see cref="ILogMessage{TPayload}"/> to submit.</param>
     /// <typeparam name="TPayload">The type of the payload of the log message.</typeparam>
     /// <returns>A <see cref="ValueTask"/> that represents the asynchronous operation of submitting the log message.</returns>
-    public ValueTask SubmitAsync<TPayload>(ILogMessage<TPayload> logMessage);
+    public ValueTask SubmitAsync<TPayload>(ILogMessage<TPayload> logMessage)
+        where TPayload : notnull;
 }
