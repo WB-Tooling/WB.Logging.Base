@@ -6,6 +6,7 @@ namespace WB.Logging;
 /// </summary>
 /// <typeparam name="TPayload">The type of the payload of the log messages that this log sink can process.</typeparam>
 public interface ILogSink<TPayload>
+    where TPayload : notnull
 {
     // ┌─────────────────────────────────────────────────────────────────────────────┐
     // │ Public Methods                                                              │

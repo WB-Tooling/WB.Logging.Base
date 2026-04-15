@@ -8,6 +8,7 @@ namespace WB.Logging;
 /// A log message.
 /// </summary>
 public interface ILogMessage<out TPayload>
+    where TPayload : notnull
 {
     // ┌─────────────────────────────────────────────────────────────────────────────┐
     // │ Public Properties                                                           │
@@ -31,5 +32,5 @@ public interface ILogMessage<out TPayload>
     /// <summary>
     /// Gets the payload of the log message.
     /// </summary>
-    public TPayload? Payload { get; }
+    public TPayload Payload { get; }
 }
