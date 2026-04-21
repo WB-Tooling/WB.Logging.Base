@@ -16,7 +16,7 @@
     <PackageVersion Include="Roslynator.Analyzers" Version="4.15.0" />
     <PackageVersion Include="Roslynator.CodeAnalysis.Analyzers" Version="4.15.0" />
     <PackageVersion Include="Roslynator.Formatting.Analyzers" Version="4.15.0" />
-    <PackageVersion Include="TUnit" Version="1.33.0" />
+    <PackageVersion Include="TUnit" Version="1.37.10" />
     <PackageVersion Include="Verify" Version="31.15.0" />
     <PackageVersion Include="Verify.TUnit" Version="31.15.0" />
   </ItemGroup>
