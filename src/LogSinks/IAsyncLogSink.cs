@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 
 namespace WB.Logging;
@@ -10,6 +11,13 @@ public interface IAsyncLogSink
     // ┌─────────────────────────────────────────────────────────────────────────────┐
     // │ Public Methods                                                              │
     // └─────────────────────────────────────────────────────────────────────────────┘
+
+    /// <summary>
+    /// Disables this log sink, preventing it from processing any log messages until it is re-enabled.
+    /// </summary>
+    /// <returns>A <see cref="IDisposable"/> that, when disposed, re-enables the log sink.</returns>
+    /// <exception cref="InvalidOperationException">Thrown if the log sink is already disabled.</exception>
+    public IDisposable Disable();
 
     /// <summary>
     /// Submits a <see cref="ILogMessage{TPayload}"/> to this log sink for processing.
