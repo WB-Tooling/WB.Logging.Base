@@ -13,11 +13,12 @@ public interface IAsyncLogSink
     // └─────────────────────────────────────────────────────────────────────────────┘
 
     /// <summary>
-    /// Disables this log sink, preventing it from processing any log messages until it is re-enabled.
+    /// Adds the <paramref name="filter"/> to this log sink. The filter will be used 
+    /// to determine whether a log message should be processed by this log sink or not.
     /// </summary>
-    /// <returns>A <see cref="IDisposable"/> that, when disposed, re-enables the log sink.</returns>
-    /// <exception cref="InvalidOperationException">Thrown if the log sink is already disabled.</exception>
-    public IDisposable Disable();
+    /// <param name="filter">The filter to add.</param>
+    /// <returns>A <see cref="IDisposable"/> that, when disposed, removes the filter from the log sink.</returns>
+    public IDisposable AddFilter(ILogMessageFilter filter);
 
     /// <summary>
     /// Submits a <see cref="ILogMessage{TPayload}"/> to this log sink for processing.
