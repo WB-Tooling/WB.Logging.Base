@@ -1,12 +1,14 @@
 namespace WB.Logging;
 
 /// <summary>
-/// A filter for log messages.
+/// A filter for log messages with payload of type <typeparamref name="TPayload"/>.
 /// </summary>
-public interface ILogMessageFilter
+/// <typeparam name="TPayload">The type of the log message payload.</typeparam>
+public interface ILogMessageFilter<in TPayload> : ILogMessageFilter
+    where TPayload : notnull
 {
     // ┌─────────────────────────────────────────────────────────────────────────────┐
-    // │ Public Methods.                                                             │
+    // │ Public Methods                                                              │
     // └─────────────────────────────────────────────────────────────────────────────┘
 
     /// <summary>
@@ -14,5 +16,5 @@ public interface ILogMessageFilter
     /// </summary>
     /// <param name="logMessage">The log message to evaluate.</param>
     /// <returns><c>true</c> if the log message matches the filter criteria; otherwise, <c>false</c>.</returns>
-    public bool IsMatch(object logMessage);
+    public bool IsMatch(ILogMessage<TPayload> logMessage);
 }
