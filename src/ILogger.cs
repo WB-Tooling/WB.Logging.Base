@@ -84,9 +84,10 @@ public interface ILogger : IAsyncDisposable
     public ILogger CreateChildLogger(string name);
 
     /// <summary>
-    /// Attaches a <see cref="ILogMessageFilter"/> to this logger. The filter will be applied to all log messages of type <typeparamref name="TPayload"/> submitted to this logger.
+    /// Attaches a <see cref="LogMessageFilter{TPayload}"/> to this logger. The filter will be applied to all log messages of type <typeparamref name="TPayload"/> submitted to this logger.
     /// </summary>
-    /// <param name="filter">The <see cref="ILogMessageFilter"/> to attach.</param>
+    /// <param name="filter">The <see cref="LogMessageFilter{TPayload}"/> to attach.</param>
     /// <returns>An <see cref="IDisposable"/> that can be used to detach the filter.</returns>
-    public IDisposable AddLogMessageFilter(ILogMessageFilter filter);
+    public IDisposable AddLogMessageFilter<TPayload>(LogMessageFilter<TPayload> filter)
+        where TPayload : notnull;
 }

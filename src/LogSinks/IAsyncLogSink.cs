@@ -18,7 +18,8 @@ public interface IAsyncLogSink
     /// </summary>
     /// <param name="filter">The filter to add.</param>
     /// <returns>A <see cref="IDisposable"/> that, when disposed, removes the filter from the log sink.</returns>
-    public IDisposable AddFilter(ILogMessageFilter filter);
+    public IDisposable AddFilter<TPayload>(LogMessageFilter<TPayload> filter)
+        where TPayload : notnull;
 
     /// <summary>
     /// Submits a <see cref="ILogMessage{TPayload}"/> to this log sink for processing.
