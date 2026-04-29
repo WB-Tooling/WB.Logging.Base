@@ -16,8 +16,10 @@ public interface ILogSink
     /// to determine whether a log message should be processed by this log sink or not.
     /// </summary>
     /// <param name="filter">The filter to add.</param>
+    /// <typeparam name="TPayload">The type of the payload of the log message.</typeparam>
     /// <returns>A <see cref="IDisposable"/> that, when disposed, removes the filter from the log sink.</returns>
-    public IDisposable AddFilter(ILogMessageFilter filter);
+    public IDisposable AddFilter<TPayload>(LogMessageFilter<TPayload> filter)
+        where TPayload : notnull;
 
     /// <summary>
     /// Submits a <see cref="ILogMessage{TPayload}"/> to this log sink for processing.
