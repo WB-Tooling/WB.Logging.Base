@@ -12,10 +12,8 @@ public interface ILogSink
     // └─────────────────────────────────────────────────────────────────────────────┘
 
     /// <summary>
-    /// Submits a <see cref="ILogMessage{TPayload}"/> to this log sink for processing.
+    /// Submits a <see cref="LogMessage"/> to this log sink for processing.
     /// </summary>
-    /// <param name="logMessage">The <see cref="ILogMessage{TPayload}"/> to submit.</param>
-    /// <typeparam name="TPayload">The type of the payload of the log message.</typeparam>
-    public void Submit<TPayload>(ILogMessage<TPayload> logMessage)
-        where TPayload : notnull;
+    /// <param name="logMessage">The <see cref="LogMessage"/> to submit.</param>
+    public void Submit(LogMessage logMessage);
 }

@@ -5,50 +5,48 @@ using System.Collections.Generic;
 namespace WB.Logging;
 
 /// <summary>
-/// Manages registration and matching of log message filters for different payload types.
+/// A set of <see cref="LogMessageFilter"/>s registered for different payload types.
 /// </summary>
-public sealed class LogMessageFilterRegistry
+public sealed class LogMessageFilters
 {
     // ┌─────────────────────────────────────────────────────────────────────────────┐
     // │ Private Fields                                                              │
     // └─────────────────────────────────────────────────────────────────────────────┘
-    private readonly ConcurrentDictionary<Type, List<ILogMessageFilterWrapper>> logMessageFilters = new();
+    private readonly ConcurrentDictionary<Type, List<LogMessageFilter>> logMessageFilters = new();
 
-    private readonly ConcurrentDictionary<Type, List<ILogMessageFilterWrapper>?> logMessageFiltersCache = new();
+    private readonly ConcurrentDictionary<Type, List<LogMessageFilter>?> logMessageFiltersCache = new();
 
     // ┌─────────────────────────────────────────────────────────────────────────────┐
     // │ Public Methods                                                              │
     // └─────────────────────────────────────────────────────────────────────────────┘
 
     /// <summary>
-    /// Registers the <paramref name="filter"/> for <see cref="ILogMessage{TPayload}"/> with payload type <typeparamref name="TPayload"/>.
+    /// Registers the <paramref name="filter"/> for <see cref="LogMessage"/>.
     /// </summary>
-    /// <param name="filter">The <see cref="LogMessageFilter{TPayload}"/> to register.</param>
+    /// <param name="filter">The <see cref="LogMessageFilter"/> to register.</param>
     /// <returns>An <see cref="IDisposable"/> that can be used to unregister the filter.</returns>
     /// <exception cref="ArgumentNullException">Thrown if <paramref name="filter"/> is <c>null</c>.</exception>
-    public IDisposable RegisterLogMessageFilter<TPayload>(LogMessageFilter<TPayload> filter)
+    public IDisposable RegisterLogMessageFilter<TPayload>(LogMessageFilter filter)
         where TPayload : notnull
     {
         ArgumentNullException.ThrowIfNull(filter);
 
-        List<ILogMessageFilterWrapper> list = logMessageFilters.GetOrAdd(typeof(TPayload), _ => new List<ILogMessageFilterWrapper>(capacity: 2));
-
-        LogMessageFilterWrapper<TPayload> wrapper = new(filter);
+        List<LogMessageFilter> list = logMessageFilters.GetOrAdd(typeof(TPayload), _ => new List<LogMessageFilter>(capacity: 2));
 
         lock (list)
         {
-            list.Add(wrapper);
+            list.Add(filter);
         }
 
         logMessageFiltersCache.Clear();
 
         return new DelegateDisposable(() =>
         {
-            if (logMessageFilters.TryGetValue(typeof(TPayload), out List<ILogMessageFilterWrapper>? list))
+            if (logMessageFilters.TryGetValue(typeof(TPayload), out List<LogMessageFilter>? list))
             {
                 lock (list)
                 {
-                    list.Remove(wrapper);
+                    list.Remove(filter);
 
                     if (list.Count == 0)
                     {
@@ -61,25 +59,25 @@ public sealed class LogMessageFilterRegistry
 
     /// <summary>
     /// Determines whether the specified <paramref name="logMessage"/> matches the registered filter for
-    /// its payload <typeparamref name="TPayload"/>.
+    /// its payload type.
     /// </summary>
-    /// <typeparam name="TPayload">The type of the payload.</typeparam>
     /// <param name="logMessage">The log message to check.</param>
     /// <returns><c>true</c> if the log message matches the filter; otherwise, <c>false</c>.</returns>
-    public bool IsMatch<TPayload>(ILogMessage<TPayload> logMessage)
-        where TPayload : notnull
+    public bool IsMatch(LogMessage logMessage)
     {
-        List<ILogMessageFilterWrapper>? filter = GetLogMessageFilter<TPayload>();
+        ArgumentNullException.ThrowIfNull(logMessage);
 
-        if (filter is null)
+        List<LogMessageFilter>? filters = GetLogMessageFilter(logMessage.Payload.GetType());
+
+        if (filters is null)
         {
             return true;
         }
         else
         {
-            foreach (ILogMessageFilterWrapper wrapper in filter)
+            foreach (LogMessageFilter filter in filters)
             {
-                if (!wrapper.IsMatch(logMessage))
+                if (!filter(logMessage))
                 {
                     return false;
                 }
@@ -92,28 +90,25 @@ public sealed class LogMessageFilterRegistry
     // ┌─────────────────────────────────────────────────────────────────────────────┐
     // │ Private Methods                                                             │
     // └─────────────────────────────────────────────────────────────────────────────┘
-    private List<ILogMessageFilterWrapper>? GetLogMessageFilter<TPayload>()
-        where TPayload : notnull
+    private List<LogMessageFilter>? GetLogMessageFilter(Type payloadType)
     {
-        Type type = typeof(TPayload);
-
-        if (logMessageFiltersCache.TryGetValue(type, out List<ILogMessageFilterWrapper>? cached))
+        if (logMessageFiltersCache.TryGetValue(payloadType, out List<LogMessageFilter>? cached))
         {
             return cached;
         }
 
-        List<ILogMessageFilterWrapper> result = new(capacity: 4);
+        List<LogMessageFilter> result = new(capacity: 4);
 
-        if (logMessageFilters.TryGetValue(type, out List<ILogMessageFilterWrapper>? exact))
+        if (logMessageFilters.TryGetValue(payloadType, out List<LogMessageFilter>? exact))
         {
             result.AddRange(exact);
         }
 
-        Type? baseType = type.BaseType;
+        Type? baseType = payloadType.BaseType;
 
         while (baseType is not null)
         {
-            if (logMessageFilters.TryGetValue(baseType, out List<ILogMessageFilterWrapper>? baseFilter))
+            if (logMessageFilters.TryGetValue(baseType, out List<LogMessageFilter>? baseFilter))
             {
                 result.AddRange(baseFilter);
             }
@@ -121,9 +116,9 @@ public sealed class LogMessageFilterRegistry
             baseType = baseType.BaseType;
         }
 
-        foreach (Type? @interface in type.GetInterfaces())
+        foreach (Type? @interface in payloadType.GetInterfaces())
         {
-            if (logMessageFilters.TryGetValue(@interface, out List<ILogMessageFilterWrapper>? interfaceFilter))
+            if (logMessageFilters.TryGetValue(@interface, out List<LogMessageFilter>? interfaceFilter))
             {
                 result.AddRange(interfaceFilter);
             }
@@ -131,11 +126,11 @@ public sealed class LogMessageFilterRegistry
 
         if (result.Count == 0)
         {
-            return logMessageFiltersCache[type] = null;
+            return logMessageFiltersCache[payloadType] = null;
         }
         else
         {
-            return logMessageFiltersCache[type] = result;
+            return logMessageFiltersCache[payloadType] = result;
         }
     }
 }
