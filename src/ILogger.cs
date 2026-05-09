@@ -55,6 +55,13 @@ public interface ILogger : IAsyncDisposable
         where TPayload : notnull;
 
     /// <summary>
+    /// Logs an <paramref name="exception"/> at with <see cref="LogLevel.Error"/>.
+    /// </summary>
+    /// <param name="exception">The <see cref="Exception"/> to log.</param>
+    public void Exception(Exception exception)
+        => Log(LogLevel.Error, exception);
+
+    /// <summary>
     /// Flushes all pending log messages.
     /// </summary>
     /// <param name="cancellationToken">A <see cref="CancellationToken"/> to observe while waiting for the flush to complete.</param>

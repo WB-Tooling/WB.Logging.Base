@@ -25,6 +25,15 @@ public static class ILoggerExtensions
         }
 
         /// <summary>
+        /// Logs the <paramref name="payload"/> at <see cref="LogLevel.Debug"/>.
+        /// </summary>        
+        /// <param name="payload">The payload to log.</param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void Debug<TPayload>(TPayload payload)
+            where TPayload : notnull
+            => @this.Log(LogLevel.Debug, payload);  
+
+        /// <summary>
         /// Logs the <paramref name="payload"/> at <see cref="LogLevel.Info"/>.
         /// </summary>
         /// <param name="payload">The payload to log.</param>
