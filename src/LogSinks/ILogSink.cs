@@ -17,6 +17,6 @@ public interface ILogSink
     /// Submits a <see cref="ILogMessage{TPayload}"/> to this log sink for processing.
     /// </summary>
     /// <param name="logMessage">The <see cref="ILogMessage{TPayload}"/> to submit.</param>
-    public void Write<TPayload>(ILogMessage<TPayload> logMessage)
+    public void Submit<TPayload>(ILogMessage<TPayload> logMessage)
         where TPayload : notnull;
 }
