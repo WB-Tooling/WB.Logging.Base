@@ -7,7 +7,7 @@ namespace WB.Logging;
 /// A log message with a strongly-typed <see cref="Payload"/>.
 /// </summary>
 /// <typeparam name="TPayload">The <see cref="Type"/> of the payload.</typeparam>
-public interface ILogMessagea<TPayload> : ILogMessage
+public interface ILogMessage<TPayload> : ILogMessage
     where TPayload : notnull
 {
     // ┌─────────────────────────────────────────────────────────────────────────────┐

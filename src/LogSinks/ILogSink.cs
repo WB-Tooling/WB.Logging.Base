@@ -1,4 +1,6 @@
 using System;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace WB.Logging;
 
@@ -12,8 +14,9 @@ public interface ILogSink
     // └─────────────────────────────────────────────────────────────────────────────┘
 
     /// <summary>
-    /// Submits a <see cref="LogMessage"/> to this log sink for processing.
+    /// Submits a <see cref="ILogMessage{TPayload}"/> to this log sink for processing.
     /// </summary>
-    /// <param name="logMessage">The <see cref="LogMessage"/> to submit.</param>
-    public void Submit(LogMessage logMessage);
+    /// <param name="logMessage">The <see cref="ILogMessage{TPayload}"/> to submit.</param>
+    public void Write<TPayload>(ILogMessage<TPayload> logMessage)
+        where TPayload : notnull;
 }

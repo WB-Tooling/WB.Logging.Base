@@ -5,21 +5,21 @@ using System.Collections.Generic;
 namespace WB.Logging;
 
 /// <summary>
-/// A set of <see cref="LogMessageFilter"/>s registered for different payload types.
+/// A pipeline of <see cref="LogMessageFilter"/>s that can be used to filter <see cref="ILogMessage"/>s before they are processed by log sinks.
 /// </summary>
-public sealed class LogMessageFilters
+public sealed class LogMessageFilterPipeline
 {
     // ┌─────────────────────────────────────────────────────────────────────────────┐
     // │ Private Fields                                                              │
     // └─────────────────────────────────────────────────────────────────────────────┘
-    private readonly ConcurrentBag<LogMessageFilter> logMessageFilters = [];
+    private readonly ConcurrentDictionary<LogMessageFilter, byte> logMessageFilters = new();
 
     // ┌─────────────────────────────────────────────────────────────────────────────┐
     // │ Public Methods                                                              │
     // └─────────────────────────────────────────────────────────────────────────────┘
 
     /// <summary>
-    /// Registers the <paramref name="filter"/> for <see cref="LogMessage"/>.
+    /// Registers the <paramref name="filter"/> for <see cref="ILogMessage"/>.
     /// </summary>
     /// <param name="filter">The <see cref="LogMessageFilter"/> to register.</param>
     /// <returns>An <see cref="IDisposable"/> that can be used to unregister the filter.</returns>
@@ -28,11 +28,11 @@ public sealed class LogMessageFilters
     {
         ArgumentNullException.ThrowIfNull(filter);
 
-        logMessageFilters.Add(filter);
+        logMessageFilters.TryAdd(filter, 0);
 
         return new DelegateDisposable(() =>
         {
-            logMessageFilters.TryTake(out LogMessageFilter? _);
+            logMessageFilters.TryRemove(filter, out _);
         });
     }
 
@@ -42,11 +42,11 @@ public sealed class LogMessageFilters
     /// </summary>
     /// <param name="logMessage">The log message to check.</param>
     /// <returns><c>true</c> if the log message matches the filter; otherwise, <c>false</c>.</returns>
-    public bool IsMatch(LogMessage logMessage)
+    public bool IsMatch(ILogMessage logMessage)
     {
         ArgumentNullException.ThrowIfNull(logMessage);
 
-        foreach (LogMessageFilter logMessageFilter in logMessageFilters)
+        foreach (LogMessageFilter logMessageFilter in logMessageFilters.Keys)
         {
             if (!logMessageFilter(logMessage))
             {

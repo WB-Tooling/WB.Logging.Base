@@ -38,7 +38,7 @@ public interface ILogger : IAsyncDisposable
     public IReadOnlyList<ILogSink> LogSinks { get; }
 
     /// <summary>
-    /// Gets the minimum <see cref="LogLevel"/> for <see cref="LogMessage"/>s.
+    /// Gets the minimum <see cref="LogLevel"/> for <see cref="ILogMessage"/>s.
     /// </summary>
     public LogLevel? MinimumLogLevel { get; set; }
 
@@ -53,13 +53,6 @@ public interface ILogger : IAsyncDisposable
     /// <param name="payload">The payload to log.</param>
     public void Log<TPayload>(LogLevel? logLevel, TPayload payload)
         where TPayload : notnull;
-
-    /// <summary>
-    /// Logs an <paramref name="exception"/> at with <see cref="LogLevel.Error"/>.
-    /// </summary>
-    /// <param name="exception">The <see cref="Exception"/> to log.</param>
-    public void Exception(Exception exception)
-        => Log(LogLevel.Error, exception);
 
     /// <summary>
     /// Flushes all pending log messages.
