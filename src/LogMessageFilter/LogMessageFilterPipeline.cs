@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace WB.Logging;
 
@@ -13,6 +14,8 @@ public sealed class LogMessageFilterPipeline
     // │ Private Fields                                                              │
     // └─────────────────────────────────────────────────────────────────────────────┘
     private readonly ConcurrentDictionary<LogMessageFilter, byte> logMessageFilters = new();
+
+    private volatile LogMessageFilter? compiledFilters;
 
     // ┌─────────────────────────────────────────────────────────────────────────────┐
     // │ Public Methods                                                              │
@@ -30,9 +33,13 @@ public sealed class LogMessageFilterPipeline
 
         logMessageFilters.TryAdd(filter, 0);
 
+        compiledFilters = Recompile();
+
         return new DelegateDisposable(() =>
         {
             logMessageFilters.TryRemove(filter, out _);
+
+            compiledFilters = Recompile();
         });
     }
 
@@ -43,17 +50,32 @@ public sealed class LogMessageFilterPipeline
     /// <param name="logMessage">The log message to check.</param>
     /// <returns><c>true</c> if the log message matches the filter; otherwise, <c>false</c>.</returns>
     public bool IsMatch(ILogMessage logMessage)
-    {
-        ArgumentNullException.ThrowIfNull(logMessage);
+        => compiledFilters?.Invoke(logMessage) ?? true;
 
-        foreach (LogMessageFilter logMessageFilter in logMessageFilters.Keys)
+    // ┌─────────────────────────────────────────────────────────────────────────────┐
+    // │ Private Methods                                                             │
+    // └─────────────────────────────────────────────────────────────────────────────┘
+    private LogMessageFilter? Recompile()
+    {
+        // Snapshot
+        LogMessageFilter[] logMessageFilters = [.. this.logMessageFilters.Keys];
+
+        if (logMessageFilters.Length == 0)
         {
-            if (!logMessageFilter(logMessage))
-            {
-                return false;
-            }
+            return null;
         }
 
-        return true;
+        return logMessage =>
+        {
+            for (int i = 0; i < logMessageFilters.Length; i++)
+            {
+                if (!logMessageFilters[i](logMessage))
+                {
+                    return false;
+                }
+            }
+    
+            return true;
+        };
     }
 }
