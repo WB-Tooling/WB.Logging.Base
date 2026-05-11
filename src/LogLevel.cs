@@ -6,17 +6,22 @@ namespace WB.Logging;
 public enum LogLevel
 {
     /// <summary>
+    /// Debug log level.
+    /// </summary>
+    Debug = 0,
+
+    /// <summary>
     /// Info level log level.
     /// </summary>
-    Info = 0,
+    Info = 1,
 
     /// <summary>
     /// Warning log level.
     /// </summary>
-    Warning = 1,
+    Warning = 2,
 
     /// <summary>
     /// Error log level.
     /// </summary>
-    Error = 2
+    Error = 3
 }

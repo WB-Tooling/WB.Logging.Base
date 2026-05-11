@@ -1,9 +1,21 @@
+using System;
 using System.Collections.Generic;
 using AwesomeAssertions;
-using FakeItEasy;
 using WB.Logging;
 
-namespace LogMessageRegistryTests.MethodTests.IsMatchMethodTests;
+namespace LogMessageFilterPipelineTests.MethodTests.IsMatchMethodTests;
+
+internal sealed class LogMessage : ILogMessage
+{
+    public DateTimeOffset Timestamp { get; set; }
+
+    public IReadOnlyList<string> Senders { get; set; } = null!;
+
+    public LogLevel? LogLevel { get; set; }
+
+
+    public object Payload { get; set; } = null!;
+}
 
 public sealed class TheIsMatchMethod
 {
@@ -13,12 +25,12 @@ public sealed class TheIsMatchMethod
         // Arrange
         LogMessage logMessage = new()
         {
-            Payload = "test",  
+            Payload = "test",
         };
-        LogMessageFilters logMessageFilters = new();
+        LogMessageFilterPipeline logMessagePipeline = new();
 
         // Act
-        bool isMatch = logMessageFilters.IsMatch(logMessage);
+        bool isMatch = logMessagePipeline.IsMatch(logMessage);
 
         // Assert
         isMatch.Should().BeTrue(because: "no filters are registered, so any message should match");
@@ -32,12 +44,12 @@ public sealed class TheIsMatchMethod
         {
             Payload = "test",
         };
-        LogMessageFilters logMessageFilters = new();
-        logMessageFilters.Add(_ => false);
-        logMessageFilters.Add(_ => true);
+        LogMessageFilterPipeline logMessagePipeline = new();
+        logMessagePipeline.Add(_ => false);
+        logMessagePipeline.Add(_ => true);
 
         // Act
-        bool isMatch = logMessageFilters.IsMatch(logMessage);
+        bool isMatch = logMessagePipeline.IsMatch(logMessage);
 
         // Assert
         isMatch.Should().BeFalse(because: "the registered filter returns false for the message");
@@ -51,12 +63,12 @@ public sealed class TheIsMatchMethod
         {
             Payload = "test",
         };
-        LogMessageFilters logMessageFilters = new();
-        logMessageFilters.Add(_ => true);
-        logMessageFilters.Add(_ => true);
+        LogMessageFilterPipeline logMessagePipeline = new();
+        logMessagePipeline.Add(_ => true);
+        logMessagePipeline.Add(_ => true);
 
         // Act
-        bool isMatch = logMessageFilters.IsMatch(logMessage);
+        bool isMatch = logMessagePipeline.IsMatch(logMessage);
 
         // Assert
         isMatch.Should().BeTrue(because: "all registered filters return true for the message");

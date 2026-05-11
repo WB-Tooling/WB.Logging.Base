@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace WB.Logging;
@@ -13,9 +14,11 @@ public interface IAsyncLogSink
     // └─────────────────────────────────────────────────────────────────────────────┘
 
     /// <summary>
-    /// Submits a <see cref="LogMessage"/> to this log sink for processing.
+    /// Submits a <see cref="ILogMessage{TPayload}"/> to this log sink for processing.
     /// </summary>
-    /// <param name="logMessage">The <see cref="LogMessage"/> to submit.</param>
+    /// <param name="logMessage">The <see cref="ILogMessage{TPayload}"/> to submit.</param>
+    /// <param name="cancellationToken">A <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
     /// <returns>A <see cref="ValueTask"/> that represents the asynchronous operation of submitting the log message.</returns>
-    public ValueTask SubmitAsync(LogMessage logMessage);
+    public ValueTask SubmitAsync<TPayload>(ILogMessage<TPayload> logMessage, CancellationToken cancellationToken)
+        where TPayload : notnull;
 }

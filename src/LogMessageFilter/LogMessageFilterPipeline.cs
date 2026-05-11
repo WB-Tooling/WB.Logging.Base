@@ -1,25 +1,28 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace WB.Logging;
 
 /// <summary>
-/// A set of <see cref="LogMessageFilter"/>s registered for different payload types.
+/// A pipeline of <see cref="LogMessageFilter"/>s that can be used to filter <see cref="ILogMessage"/>s before they are processed by log sinks.
 /// </summary>
-public sealed class LogMessageFilters
+public sealed class LogMessageFilterPipeline
 {
     // ┌─────────────────────────────────────────────────────────────────────────────┐
     // │ Private Fields                                                              │
     // └─────────────────────────────────────────────────────────────────────────────┘
-    private readonly ConcurrentBag<LogMessageFilter> logMessageFilters = [];
+    private readonly ConcurrentDictionary<LogMessageFilter, byte> logMessageFilters = new();
+
+    private volatile LogMessageFilter? compiledFilters;
 
     // ┌─────────────────────────────────────────────────────────────────────────────┐
     // │ Public Methods                                                              │
     // └─────────────────────────────────────────────────────────────────────────────┘
 
     /// <summary>
-    /// Registers the <paramref name="filter"/> for <see cref="LogMessage"/>.
+    /// Registers the <paramref name="filter"/> for <see cref="ILogMessage"/>.
     /// </summary>
     /// <param name="filter">The <see cref="LogMessageFilter"/> to register.</param>
     /// <returns>An <see cref="IDisposable"/> that can be used to unregister the filter.</returns>
@@ -28,11 +31,15 @@ public sealed class LogMessageFilters
     {
         ArgumentNullException.ThrowIfNull(filter);
 
-        logMessageFilters.Add(filter);
+        logMessageFilters.TryAdd(filter, 0);
+
+        compiledFilters = Recompile();
 
         return new DelegateDisposable(() =>
         {
-            logMessageFilters.TryTake(out LogMessageFilter? _);
+            logMessageFilters.TryRemove(filter, out _);
+
+            compiledFilters = Recompile();
         });
     }
 
@@ -42,18 +49,33 @@ public sealed class LogMessageFilters
     /// </summary>
     /// <param name="logMessage">The log message to check.</param>
     /// <returns><c>true</c> if the log message matches the filter; otherwise, <c>false</c>.</returns>
-    public bool IsMatch(LogMessage logMessage)
-    {
-        ArgumentNullException.ThrowIfNull(logMessage);
+    public bool IsMatch(ILogMessage logMessage)
+        => compiledFilters?.Invoke(logMessage) ?? true;
 
-        foreach (LogMessageFilter logMessageFilter in logMessageFilters)
+    // ┌─────────────────────────────────────────────────────────────────────────────┐
+    // │ Private Methods                                                             │
+    // └─────────────────────────────────────────────────────────────────────────────┘
+    private LogMessageFilter? Recompile()
+    {
+        // Snapshot
+        LogMessageFilter[] logMessageFilters = [.. this.logMessageFilters.Keys];
+
+        if (logMessageFilters.Length == 0)
         {
-            if (!logMessageFilter(logMessage))
-            {
-                return false;
-            }
+            return null;
         }
 
-        return true;
+        return logMessage =>
+        {
+            for (int i = 0; i < logMessageFilters.Length; i++)
+            {
+                if (!logMessageFilters[i](logMessage))
+                {
+                    return false;
+                }
+            }
+    
+            return true;
+        };
     }
 }

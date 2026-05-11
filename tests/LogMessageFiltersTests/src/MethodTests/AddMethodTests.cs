@@ -10,10 +10,10 @@ public sealed class TheAddMethod
     public void ShouldThrowArgumentNullExceptionIfFilterIsNull()
     {
         // Arrange
-        LogMessageFilters logMessageFilters = new();
+        LogMessageFilterPipeline logMessagePipeline = new();
 
         // Act
-        Action act = () => logMessageFilters.Add(null!);
+        Action act = () => logMessagePipeline.Add(null!);
 
         // Assert
         act.Should().Throw<ArgumentNullException>(because: "a null filter cannot be registered");

@@ -38,7 +38,7 @@ public interface ILogger : IAsyncDisposable
     public IReadOnlyList<ILogSink> LogSinks { get; }
 
     /// <summary>
-    /// Gets the minimum <see cref="LogLevel"/> for <see cref="LogMessage"/>s.
+    /// Gets the minimum <see cref="LogLevel"/> for <see cref="ILogMessage"/>s.
     /// </summary>
     public LogLevel? MinimumLogLevel { get; set; }
 

@@ -1,22 +1,21 @@
 using System;
-using System.Threading;
-using System.Threading.Tasks;
+using System.Collections.Generic;
 
 namespace WB.Logging;
 
 /// <summary>
-/// A log sink that can receive and process log messages.
+/// A log message with a strongly-typed <see cref="Payload"/>.
 /// </summary>
-public interface ILogSink
+/// <typeparam name="TPayload">The <see cref="Type"/> of the payload.</typeparam>
+public interface ILogMessage<TPayload> : ILogMessage
+    where TPayload : notnull
 {
     // ┌─────────────────────────────────────────────────────────────────────────────┐
-    // │ Public Methods                                                              │
+    // │ Public Properties                                                           │
     // └─────────────────────────────────────────────────────────────────────────────┘
 
     /// <summary>
-    /// Submits a <see cref="ILogMessage{TPayload}"/> to this log sink for processing.
+    /// Gets the payload of the log message.
     /// </summary>
-    /// <param name="logMessage">The <see cref="ILogMessage{TPayload}"/> to submit.</param>
-    public void Submit<TPayload>(ILogMessage<TPayload> logMessage)
-        where TPayload : notnull;
+    public new TPayload Payload { get; }
 }
