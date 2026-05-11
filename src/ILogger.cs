@@ -38,7 +38,7 @@ public interface ILogger : IAsyncDisposable
     public IReadOnlyList<ILogSink> LogSinks { get; }
 
     /// <summary>
-    /// Gets the minimum <see cref="LogLevel"/> for <see cref="ILogMessage{TPayload}"/>s.
+    /// Gets the minimum <see cref="LogLevel"/> for <see cref="LogMessage"/>s.
     /// </summary>
     public LogLevel? MinimumLogLevel { get; set; }
 
@@ -84,10 +84,9 @@ public interface ILogger : IAsyncDisposable
     public ILogger CreateChildLogger(string name);
 
     /// <summary>
-    /// Attaches a <see cref="LogMessageFilter{TPayload}"/> to this logger. The filter will be applied to all log messages of type <typeparamref name="TPayload"/> submitted to this logger.
+    /// Attaches a <see cref="LogMessageFilter"/> to this logger. The filter will be applied to all log messages submitted to this logger.
     /// </summary>
-    /// <param name="filter">The <see cref="LogMessageFilter{TPayload}"/> to attach.</param>
+    /// <param name="filter">The <see cref="LogMessageFilter"/> to attach.</param>
     /// <returns>An <see cref="IDisposable"/> that can be used to detach the filter.</returns>
-    public IDisposable AddLogMessageFilter<TPayload>(LogMessageFilter<TPayload> filter)
-        where TPayload : notnull;
+    public IDisposable AddLogMessageFilter(LogMessageFilter filter);
 }

@@ -7,8 +7,8 @@
   <Folder Name="/tests/ILoggerExtensionsTests/src/">
     <Project Path="tests/ILoggerExtensionsTests/src/ILoggerExtensionsTests.csproj" />
   </Folder>
-  <Folder Name="/tests/LogMessageRegistryTests/" />
-  <Folder Name="/tests/LogMessageRegistryTests/src/">
-    <Project Path="tests/LogMessageRegistryTests/src/LogMessageRegistryTests.csproj" />
+  <Folder Name="/tests/LogMessageFiltersTests/" />
+  <Folder Name="/tests/LogMessageFiltersTests/src/">
+    <Project Path="tests/LogMessageFiltersTests/src/LogMessageFiltersTests.csproj" />
   </Folder>
 </Solution>

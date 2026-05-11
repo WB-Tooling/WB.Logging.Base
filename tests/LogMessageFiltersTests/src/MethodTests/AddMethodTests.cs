@@ -2,18 +2,18 @@ using System;
 using AwesomeAssertions;
 using WB.Logging;
 
-namespace LogMessageRegistryTests.MethodTests.RegisterLogMessageFilterMethodTests;
+namespace LogMessageFiltersTests.MethodTests.AddMethodTests;
 
-public sealed class TheRegisterLogMessageFilterMethod
+public sealed class TheAddMethod
 {
     [Test]
     public void ShouldThrowArgumentNullExceptionIfFilterIsNull()
     {
         // Arrange
-        LogMessageFilterRegistry registry = new();
+        LogMessageFilters logMessageFilters = new();
 
         // Act
-        Action act = () => registry.RegisterLogMessageFilter<string>(null!);
+        Action act = () => logMessageFilters.Add(null!);
 
         // Assert
         act.Should().Throw<ArgumentNullException>(because: "a null filter cannot be registered");
