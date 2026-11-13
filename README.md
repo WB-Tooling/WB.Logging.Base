@@ -2,6 +2,8 @@
 
 The base library for WB.Logging.
 
+Requires .NET 11.
+
 ## 📦 Package
 
 Nuget: [WB.Logging.Base](https://www.nuget.org/packages/WB.Logging.Base/)
